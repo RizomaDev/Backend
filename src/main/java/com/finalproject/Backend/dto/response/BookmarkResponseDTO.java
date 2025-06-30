@@ -19,6 +19,7 @@ public class BookmarkResponseDTO {
     private String video;
     private String url;
     private Location location;
+    private String address;
     private Instant publicationDate;
     private Long userId;
     private List<String> imageUrls;

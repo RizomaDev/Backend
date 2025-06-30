@@ -45,6 +45,7 @@ public class BookmarkMapper {
             bookmark.getVideoUrl(),
             bookmark.getInfoAdicional(),
             bookmark.getLocation(),
+            bookmark.getAddress(),
             bookmark.getPublicationDate() != null ? bookmark.getPublicationDate().toInstant() : null,
             bookmark.getUser().getId(),
             imageUrls

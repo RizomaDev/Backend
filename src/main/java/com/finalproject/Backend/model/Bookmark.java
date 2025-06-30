@@ -25,6 +25,9 @@ public class Bookmark {
     @Embedded
     private Location location;
 
+    @Column(name = "address", length = 1000)
+    private String address;
+
     @Column(name = "publication_date")
     private Timestamp publicationDate;
 
@@ -46,4 +49,6 @@ public class Bookmark {
     private List<BookMarkImage> images;
 
     private String infoAdicional;
+
+    
 }

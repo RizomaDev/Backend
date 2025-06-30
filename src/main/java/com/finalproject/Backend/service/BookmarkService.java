@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.finalproject.Backend.dto.ImageDTO;
 import com.finalproject.Backend.dto.request.BookmarkRequestDTO;
@@ -24,6 +26,11 @@ import com.finalproject.Backend.repository.CategoryRepository;
 import com.finalproject.Backend.repository.TagRepository;
 import com.finalproject.Backend.util.ImageValidator;
 
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+import org.json.JSONObject;
+
+
 @Service
 public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
@@ -32,6 +39,7 @@ public class BookmarkService {
     private final TagRepository tagRepository;
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public BookmarkService(BookmarkRepository bookmarkRepository, BookmarkImageService bookmarkImageService, BookMarkImageRepository bookMarkImageRepository, TagRepository tagRepository, CategoryRepository categoryRepository) {
         this.bookmarkRepository = bookmarkRepository;
         this.bookmarkImageService = bookmarkImageService;
@@ -66,6 +74,7 @@ public class BookmarkService {
         Tag tag = tagRepository.findById(dto.getTagId()).orElseThrow(() -> new ResourceNotFoundException("Tag", "id", dto.getTagId()));
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category", "id", dto.getCategoryId()));
         Bookmark bookmark = BookmarkMapper.toEntity(dto, tag, category, user);
+        // Guardar el bookmark primero, sin address
         bookmark = bookmarkRepository.save(bookmark);
         // Manejo de imágenes base64 (múltiples)
         try {
@@ -84,7 +93,22 @@ public class BookmarkService {
         } catch (IOException e) {
             throw new RuntimeException("Error saving bookmark images: " + e.getMessage());
         }
+        // Lanzar reverse geocoding en segundo plano
+        if (bookmark.getLocation() != null) {
+            fetchAndUpdateAddressAsync(bookmark.getId(), bookmark.getLocation().getLatitude(), bookmark.getLocation().getLongitude());
+        }
         return BookmarkMapper.toDTO(bookmark);
+    }
+
+    @Async
+    public void fetchAndUpdateAddressAsync(Long bookmarkId, Double lat, Double lon) {
+        String address = reverseGeocode(lat, lon);
+        Optional<Bookmark> optionalBookmark = bookmarkRepository.findById(bookmarkId);
+        if (optionalBookmark.isPresent()) {
+            Bookmark bookmarkToUpdate = optionalBookmark.get();
+            bookmarkToUpdate.setAddress(address);
+            bookmarkRepository.save(bookmarkToUpdate);
+        }
     }
 
     public BookmarkResponseDTO update(Long id, BookmarkRequestDTO dto, User user) {
@@ -150,4 +174,27 @@ public class BookmarkService {
             .map(BookmarkMapper::toDTO)
             .collect(Collectors.toList());
     }
+
+    private String reverseGeocode(Double lat, Double lon) {
+        String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon;
+        RestTemplate restTemplate = new RestTemplate();
+    
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("User-Agent", "Iwatech-bookmark-app"); // Obligatorio para Nominatim
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+    
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                JSONObject json = new JSONObject(response.getBody());
+                return json.getString("display_name");
+            }
+        } catch (Exception e) {
+            System.err.println("Error en reverseGeocode: " + e.getMessage());
+        }
+    
+        return "Dirección no disponible";
+    }
+    
+    
 } 
