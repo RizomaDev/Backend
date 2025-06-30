@@ -156,6 +156,9 @@ public class BookmarkService {
                 throw new RuntimeException("Error updating bookmark images: " + e.getMessage());
             }
         }
+        if (bookmark.getLocation() != null) {
+            fetchAndUpdateAddressAsync(bookmark.getId(), bookmark.getLocation().getLatitude(), bookmark.getLocation().getLongitude());
+        }
         return BookmarkMapper.toDTO(bookmarkRepository.save(bookmark));
     }
 
