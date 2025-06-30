@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.finalproject.Backend.dto.ImageDTO;
 import com.finalproject.Backend.dto.request.BookmarkRequestDTO;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 @Service
 public class BookmarkService {
+    private static final Logger logger = LoggerFactory.getLogger(BookmarkService.class);
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkImageService bookmarkImageService;
     private final BookMarkImageRepository bookMarkImageRepository;
@@ -102,12 +105,17 @@ public class BookmarkService {
 
     @Async
     public void fetchAndUpdateAddressAsync(Long bookmarkId, Double lat, Double lon) {
+        logger.info("Iniciando fetchAndUpdateAddressAsync para bookmarkId={}, lat={}, lon={}", bookmarkId, lat, lon);
         String address = reverseGeocode(lat, lon);
+        logger.info("Dirección obtenida: {}", address);
         Optional<Bookmark> optionalBookmark = bookmarkRepository.findById(bookmarkId);
         if (optionalBookmark.isPresent()) {
             Bookmark bookmarkToUpdate = optionalBookmark.get();
             bookmarkToUpdate.setAddress(address);
             bookmarkRepository.save(bookmarkToUpdate);
+            logger.info("Bookmark actualizado con address: {}", address);
+        } else {
+            logger.error("No se encontró el bookmark con id={}", bookmarkId);
         }
     }
 
@@ -177,6 +185,7 @@ public class BookmarkService {
 
     private String reverseGeocode(Double lat, Double lon) {
         String url = "https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lon;
+        logger.info("Llamando a OpenStreetMap: {}", url);
         RestTemplate restTemplate = new RestTemplate();
     
         try {
@@ -185,12 +194,13 @@ public class BookmarkService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
     
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            logger.info("Respuesta de OpenStreetMap: {}", response.getBody());
             if (response.getStatusCode().is2xxSuccessful()) {
                 JSONObject json = new JSONObject(response.getBody());
                 return json.getString("display_name");
             }
         } catch (Exception e) {
-            System.err.println("Error en reverseGeocode: " + e.getMessage());
+            logger.error("Error en reverseGeocode: {}", e.getMessage(), e);
         }
     
         return "Dirección no disponible";
