@@ -41,7 +41,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
            return;
        }
 
-       if (path.contains("/api/auth") || path.contains("/api/countries/all") || path.contains("/api/images/")) {
+       // Allow public endpoints without token
+       if (path.contains("/api/auth") || 
+           path.contains("/api/countries/all") || 
+           path.contains("/api/images/") ||
+           (path.contains("/api/bookmarks") && method.equals("GET")) ||
+           path.contains("/api/categories/all") ||
+           path.contains("/api/tags/all")) {
            chain.doFilter(request, response);
            return;
        }
