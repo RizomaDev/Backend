@@ -19,8 +19,8 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Create directory for file uploads
-RUN mkdir -p /app/uploads && \
-    chmod 777 /app/uploads
+RUN mkdir -p /tmp/uploads && \
+    chmod 777 /tmp/uploads
 
 # Expose port
 EXPOSE 8080
@@ -29,7 +29,7 @@ EXPOSE 8080
 ENV DATABASE_URL=jdbc:postgresql://localhost:5432/travel
 ENV DATABASE_USERNAME=postgres
 ENV DATABASE_PASSWORD=postgres
-ENV FILE_UPLOAD_DIRECTORY=/app/uploads
+ENV FILE_UPLOAD_DIRECTORY=/tmp/uploads
 ENV SECRECT_JWT_KEY=defaultkey
 
 # Run the application
