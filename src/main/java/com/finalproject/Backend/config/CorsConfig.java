@@ -17,6 +17,7 @@ public class CorsConfig {
        corsConfiguration.setAllowCredentials(true);
        corsConfiguration.setAllowedOrigins(Arrays.asList(
             "http://localhost:5173",
+            "http://localhost:4173",
             "https://aquamarine-stardust-06e107.netlify.app"
         ));
        corsConfiguration.setAllowedHeaders(Arrays.asList(
