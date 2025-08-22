@@ -26,7 +26,6 @@ import com.finalproject.Backend.repository.BookmarkRepository;
 import com.finalproject.Backend.repository.BookMarkImageRepository;
 import com.finalproject.Backend.repository.CategoryRepository;
 import com.finalproject.Backend.repository.TagRepository;
-import com.finalproject.Backend.util.ImageValidator;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;

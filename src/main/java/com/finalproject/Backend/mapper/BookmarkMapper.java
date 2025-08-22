@@ -6,7 +6,6 @@ import com.finalproject.Backend.model.Bookmark;
 import com.finalproject.Backend.model.Category;
 import com.finalproject.Backend.model.Tag;
 import com.finalproject.Backend.model.User;
-import com.finalproject.Backend.model.Location;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;

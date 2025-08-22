@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.finalproject.Backend.model.Bookmark;
+
 
 @Getter
 @Setter
