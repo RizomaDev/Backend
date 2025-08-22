@@ -1,36 +1,34 @@
 package com.finalproject.Backend.config;
-  
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-
 @Configuration
 public class CorsConfig {
 
-   @Bean
-   public CorsFilter corsFilter() {
-       CorsConfiguration corsConfiguration = new CorsConfiguration();
-       corsConfiguration.setAllowCredentials(true);
-       corsConfiguration.addAllowedOrigin("http://localhost:3000");  // Frontend local
-       corsConfiguration.addAllowedOrigin("https://aquamarine-stardust-06e107.netlify.app/");  // Frontend producción
-       corsConfiguration.setAllowedHeaders(Arrays.asList(
-               "Origin", "Access-Control-Allow-Origin", "Content-Type", "Accept", 
-               "Authorization", "Origin, Accept", "X-Requested-With",
-               "Access-Control-Request-Method", "Access-Control-Request-Headers",
-               "x-user-id", "Experiences"));
-       corsConfiguration.setExposedHeaders(Arrays.asList(
-               "Origin", "Content-Type", "Accept", "Authorization",
-               "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")); 
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
         
-       corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-       
-       UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-       urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-       
-       return new CorsFilter(urlBasedCorsConfigurationSource);
-   }
+        // Allow all origins - in production you should restrict this
+        config.addAllowedOrigin("http://localhost:5173");
+        
+        // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+        config.addAllowedMethod("*");
+        
+        // Allow all headers
+        config.addAllowedHeader("*");
+        
+        // Allow credentials (cookies, authorization headers, etc.)
+        config.setAllowCredentials(true);
+        
+        // Apply this configuration to all paths
+        source.registerCorsConfiguration("/**", config);
+        
+        return new CorsFilter(source);
+    }
 }
