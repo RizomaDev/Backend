@@ -3,7 +3,6 @@ package com.finalproject.Backend.service;
 
 import com.finalproject.Backend.dto.request.UserRequest;
 import com.finalproject.Backend.exception.ResourceNotFoundException;
-import com.finalproject.Backend.model.Tag;
 import com.finalproject.Backend.model.User;
 import com.finalproject.Backend.repository.UserRepository;  
 import com.finalproject.Backend.repository.TagRepository;
