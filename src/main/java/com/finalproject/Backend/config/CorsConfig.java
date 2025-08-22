@@ -15,8 +15,8 @@ public class CorsConfig {
    public CorsFilter corsFilter() {
        CorsConfiguration corsConfiguration = new CorsConfiguration();
        corsConfiguration.setAllowCredentials(true);
-       corsConfiguration.setAllowCredentials(false);  // Cambiar a false para simplificar
-       corsConfiguration.addAllowedOrigin("*");  // Permitir todos los orígenes temporalmente
+       corsConfiguration.addAllowedOrigin("http://localhost:3000");  // Frontend local
+       corsConfiguration.addAllowedOrigin("https://aquamarine-stardust-06e107.netlify.app/");  // Frontend producción
        corsConfiguration.setAllowedHeaders(Arrays.asList(
                "Origin", "Access-Control-Allow-Origin", "Content-Type", "Accept", 
                "Authorization", "Origin, Accept", "X-Requested-With",
