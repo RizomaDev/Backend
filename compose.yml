@@ -1,10 +1,12 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: travel.db
+    container_name: rizoma.db
     restart: always
     env_file:
-      - .env
+      - .env.local
+    environment:
+      - POSTGRES_DB=rizomaVibe   # se crea la DB al iniciar
     ports:
       - "54321:5432"
     volumes:
@@ -12,14 +14,25 @@ services:
 
   admin:
     image: dpage/pgadmin4
-    container_name: travel.pgadmin
+    container_name: rizoma.pgadmin
     restart: always
     ports:
       - "8881:80"
     env_file:
-      - .env
+      - .env.local
     volumes:
-      - travel.pgadmin-data:/var/lib/pgadmin
+      - rizoma.pgadmin-data:/var/lib/pgadmin
+
+  backend:
+    build: .
+    container_name: rizoma.backend
+    restart: always
+    env_file:
+      - .env.local
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
 
 volumes:
-  travel.pgadmin-data:
+  rizoma.pgadmin-data:

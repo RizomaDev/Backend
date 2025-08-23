@@ -25,12 +25,5 @@ RUN mkdir -p /tmp/uploads && \
 # Expose port
 EXPOSE 8080
 
-# Set environment variables with defaults
-ENV DATABASE_URL=jdbc:postgresql://localhost:5432/travel
-ENV DATABASE_USERNAME=postgres
-ENV DATABASE_PASSWORD=postgres
-ENV FILE_UPLOAD_DIRECTORY=/tmp/uploads
-ENV SECRECT_JWT_KEY=defaultkey
-
 # Run the application
-CMD ["java", "-jar", "app.jar"] 
+CMD ["java", "-jar", "app.jar"]
