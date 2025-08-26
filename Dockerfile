@@ -10,7 +10,7 @@ COPY src ./src
 # Build the application
 RUN mvn clean package -DskipTests
 
-# Runtime stage
+# Runtime stage  
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
@@ -22,8 +22,8 @@ COPY --from=build /app/target/*.jar app.jar
 RUN mkdir -p /tmp/uploads && \
     chmod 777 /tmp/uploads
 
-# Expose port
+# Expose port (Railway asignará el puerto automáticamente)
 EXPOSE 8080
 
-# Run the application
-CMD ["java", "-jar", "app.jar"]
+# Run the application usando el puerto que Railway asigne
+CMD ["java", "-jar", "app.jar", "--server.port=${PORT:-8080}"]
