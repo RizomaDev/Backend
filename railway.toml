@@ -4,9 +4,8 @@ builder = "NIXPACKS"
 [deploy]
 startCommand = "mvn clean package -DskipTests && java -jar target/app.jar"
 
-# AGREGA ESTO para forzar Java 21
 [build.environment]
-JAVA_VERSION = "21"
+JAVA_VERSION = "17"
 
 [[services]]
 name = "web"
