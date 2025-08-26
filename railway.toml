@@ -4,6 +4,10 @@ builder = "NIXPACKS"
 [deploy]
 startCommand = "mvn clean package -DskipTests && java -jar target/app.jar"
 
+# AGREGA ESTO para forzar Java 21
+[build.environment]
+JAVA_VERSION = "21"
+
 [[services]]
 name = "web"
 httpPort = 8080
