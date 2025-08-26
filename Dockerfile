@@ -15,15 +15,15 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-# Copy the built artifact from build stage
+# Copy the built artifact from build stage - NOMBRE ESPECÍFICO
 COPY --from=build /app/target/*.jar app.jar
 
 # Create directory for file uploads
 RUN mkdir -p /tmp/uploads && \
     chmod 777 /tmp/uploads
 
-# Expose port (Railway asignará el puerto automáticamente)
+# Expose port
 EXPOSE 8080
 
-# Run the application usando el puerto que Railway asigne
-CMD ["java", "-jar", "app.jar", "--server.port=${PORT:-8080}"]
+# Run the application - COMANDO CORREGIDO
+ENTRYPOINT ["java", "-jar", "app.jar"]
