@@ -16,11 +16,11 @@
     <description>Backend RizomaDev app to create marks and comments to places at interative map </description>
     <url>http://maven.apache.org</url>
    <properties>
-     <java.version>21</java.version>
+     <java.version>17</java.version> 
     <jjwt.version>0.11.5</jjwt.version>
-    <maven.compiler.source>17   </maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>17</maven.compiler.source> 
+    <maven.compiler.target>17</maven.compiler.target> 
+    <maven.compiler.release>17</maven.compiler.release>  
 </properties>
     <dependencies>
         <!-- Spring Boot Starters -->
